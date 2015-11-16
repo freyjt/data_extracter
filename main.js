@@ -22,31 +22,52 @@ function Main( ) {
     outerSem.take(function( ) {
         exe = childProcess.exec(rostStr, function(err, stdout, stderr) {
             if(!err) {
-                stdout = stdout.split(lineEnd); // @TODO test: will this change on unix?
-                for(i = 0; i < stdout.length; i++) {
-                    //test the output for some identifying features of the JSON string
-                    //  imperfect to say the least
-                    if(stdout[i][0] == '{' && stdout[i].length > 50) {
-                        // console.log(stdout[i]);
-                        unpacked = JSON.parse(stdout[i]);
-                        // console.log(unpacked);
+                // stdout = stdout.split(lineEnd); // @TODO test: will this change on unix?
+                // for(i = 0; i < stdout.length; i++) {
+                //     //test the output for some identifying features of the JSON string
+                //     //  imperfect to say the least
+                //     if(stdout[i][0] == '{' && stdout[i].length > 50) {
+                //         // console.log(stdout[i]);
+                //         unpacked = JSON.parse(stdout[i]);
+                //         // console.log(unpacked);
 
-                        semap.take( function() {
-                            idsByClosure(unpacked);
-                        });
-                    }
-                }
+                //         // semap.take( function() {
+                //             idsByClosure(unpacked);
+                //         // });
+                //     }
+                // }
                 outerSem.leave();
             } else {console.log("there was an error"); }
             
         }); 
     });
+
+    //Exit is called before the callback to exec. Which makes a lot of sense
+    // if we're thinking about it. exec buffers all the stderr, out and error codes
+    //  so it has to see the full process before it can
+    //   execute. Try to move the unpacking to on.data? There's no significant reason
+    //    that shoudl be an issue
 //espnidArr doesn't even exist here...
 // well that's kidna a weird thing. This calls before idsByClosure
 //....are you going to have to spawn all of the children within the major process
+    exe.on('data', function(data) {
+        console.log("Data recieved");
+        if(data[0] == '{' && data.length > 50) {
+            unpacked = JSON.parse(data);
+            semap.take(function( ) {  
+                idsByClosure(unpacked);
+            });
+            
+        }
+    })
+
     exe.on('exit', function( ) {
-        console.log("Exit call.");
-        console.log(espnIdArr.length);
+        semap.take(function( ) { 
+            console.log("Exit call.");
+            console.log(espnIdArr.length);  
+            semap.leave();
+        });
+
     });
 
     console.log(espnIdArr.length);
