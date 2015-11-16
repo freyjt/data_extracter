@@ -14,8 +14,12 @@ function Main( ) {
     var testID       = 'cle';
 
     var rostStr      = 'phantomjs getRoster.js ' + testID;
+    var baseGameLog  = 'phantomjs getGameLog.js ';
     var espnIdArr = [];
     var playerArr = [];
+    var gameLogStr= baseGameLog; //script call for getGameLog.js
+    var gameLog; //returned
+    var gameJSON;
     //experimenting with not returning
 
     retStr = childProcess.execSync( rostStr ).toString();
@@ -25,9 +29,33 @@ function Main( ) {
         //  imperfect to say the least
         if(retStr[i][0] == '{' && retStr[i].length > 50) {
 
-            unpacked = JSON.parse(retStr[i]);
+            unpacked = JSON.parse( retStr[i] );
+            for(key in unpacked) {
+                gameLogStr = baseGameLog + unpacked[key]['espnId'];
+                console.log(gameLogStr);
+                gameLog = childProcess.execSync( gameLogStr ).toString();
+                
+                gameLog = gameLog.split('\r\n'); //WHY does lineend not work
+                //console.log(gameLog);
+                for(j = 0; j < gameLog.length; j++) {
 
-            appendIdentifiers(unpacked);
+                    if(gameLog[j][0] == '{' && gameLog[j].length >= 50) {
+                        gameJSON = JSON.parse( gameLog[j] );
+                
+                        j = gameLog.length;
+                        
+                        //@TODO handle the returned string.
+
+
+                    } else if ( gameLog[j] == "Error. No data to return." ) {
+
+                        console.log( "No data error from espnId: " );
+                        console.log( "   " + unpacked[key]['espnId'] + " : " + unpacked[key]['name']);
+                    }
+
+
+                }
+            }
 
         }
     }

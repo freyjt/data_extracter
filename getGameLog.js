@@ -38,7 +38,7 @@ function getGameLog( ) {
                     //   when you assign the json
                     //divide current row
                     dateStr     = next.innerHTML;   next = next.nextSibling;
-                    
+                    //!!! does NOT generalize to previous seasons (playoffs?)
                     playAgainst = next.getElementsByTagName('a')[1].innerHTML;
                     next        = next.nextSibling;
                     gameScore   = next.getElementsByTagName('a')[0].innerHTML;
@@ -96,8 +96,15 @@ function getGameLog( ) {
             }
             return gamesObj;
         } );
+        
+        gamesJSON = JSON.stringify(allGames);
+        
+        if(gamesJSON.length < 30) {
+            console.log("Error. No data to return.");
+        } else {
 
-        console.log( JSON.stringify(allGames) );
+            console.log( gamesJSON );
+        }
 
         phantom.exit();
 
