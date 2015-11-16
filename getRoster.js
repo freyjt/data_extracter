@@ -51,9 +51,14 @@ function getTeamRoster( ) {
                     //convert height to decimal for easier comparison later
                     var hFeet    = parseInt(heightStr);
                     var hInches  = parseInt(heightStr.substr(hFeet.toString().length + 1) );
-                    var hFeet = hFeet + (hInches / 12);
-
+                    hFeet = hFeet + (hInches / 12);
                     hFeet  = hFeet.toFixed(2);
+
+                    var weight   = next.innerHTML;  next = next.nextSibling;
+                    var college  = next.innerHTML;  next = next.nextSibling;
+                    var salary   = next.innerHTML;  next = next.nextSibling;
+
+                    if(next) { console.log("more data?"); }
 
 
                     playerObject[jersey] = {
@@ -61,8 +66,12 @@ function getTeamRoster( ) {
                         espnId:   espnId[0],
                         position: pos,
                         age:      age,
-                        height:   hFeet
+                        height:   hFeet,
+                        weight:   weight,
+                        college:  college,
+                        salary:   salary
                     }
+                    
                 }
             }
             return playerObject;
