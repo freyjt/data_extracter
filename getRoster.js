@@ -10,7 +10,9 @@ function getTeamRoster( ) {
 
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/team/roster/_/name/' + teamId;
-
+    page.onConsoleMessage = function(msg) {
+        console.log(msg);
+    }
     page.open(url, function(status) {
 
         // var content = page.content;
@@ -23,78 +25,47 @@ function getTeamRoster( ) {
             var evenPlayers = document.getElementsByClassName("evenrow")
             var next;
 
-            var gamesObj  = {};
+            var playerObject  = {};
 
-            
-            for( i = 0; i < oddGames.length + evenGames.length; i++) {
+            var idRegex = /\d+/;
+            for( i = 0; i < oddPlayers.length + evenPlayers.length; i++) {
                 //seed it up
-                if(i < oddGames.length)
-                    next = oddGames[i].firstChild;
+                if(i < oddPlayers.length)
+                    next = oddPlayers[i].firstChild;
                 else
-                    next = evenGames[i - oddGames.length].firstChild;
+                    next = evenPlayers[i - oddPlayers.length].firstChild;
 
                 if(next.innerHTML != 'Averages' && next.innerHTML != 'Totals') {
-                    ///OMG just iterate into an array, then dump the array
-                    //   when you assign the json
-                    //divide current row
-                    dateStr     = next.innerHTML;   next = next.nextSibling;
-                    
-                    playAgainst = next.getElementsByTagName('a')[1].innerHTML;
-                    next        = next.nextSibling;
-                    gameScore   = next.getElementsByTagName('a')[0].innerHTML;
-                    next        = next.nextSibling;
 
-                    timePlayed  = next.innerHTML;   next = next.nextSibling;
-                    twoAttempt  = next.innerHTML;   next = next.nextSibling;
-                    
-                    twoPercent  = next.innerHTML;   next = next.nextSibling;
-                    
-                    fgMade      = parseInt(twoAttempt);
-                    fgTried     = parseInt( (twoAttempt.substr(fgMade.toString().length + 1)) );
+                    var jersey   = next.innerHTML;  next = next.nextSibling;
+                    //extract espnId AND playername from anchor tag
+                    var anchor   = next.getElementsByTagName('a')[0];
+                    var href     = anchor.href;
+                    var espnId   = href.match(idRegex);
+                    var name     = anchor.innerHTML;
+                    next = next.nextSibling;
 
-                    threeAttempt= next.innerHTML;
+                    var pos      = next.innerHTML;  next = next.nextSibling;
+                    var age      = next.innerHTML;  next = next.nextSibling;
+                    var heightStr= next.innerHTML;  next = next.nextSibling;
+                    //convert height to decimal for easier comparison later
+                    var hFeet    = parseInt(heightStr);
+                    var hInches  = parseInt(heightStr.substr(hFeet.toString().length + 1) );
+                    var hFeet = hFeet + (hInches / 12);
 
-                    threeMade   = parseInt(threeAttempt);
-                    threeTried  = parseInt( (threeAttempt.substr(threeMade.toString().length + 1) ) );
-                    next        = next.nextSibling;
+                    hFeet  = hFeet.toFixed(2);
 
-                    threePercent= next.innerHTML;   next = next.nextSibling;
-                    freeAttempt = next.innerHTML;   next = next.nextSibling;
-                    
-                    freeMade    = parseInt(freeAttempt);
-                    freeTried   = parseInt( (freeAttempt.substr(freeMade.toString().length + 1 ) ) );
 
-                    freePercent = next.innerHTML;   next = next.nextSibling;
-                    rebound     = next.innerHTML;   next = next.nextSibling;
-                    assists     = next.innerHTML;   next = next.nextSibling;
-                    blocks      = next.innerHTML;   next = next.nextSibling;
-                    steals      = next.innerHTML;   next = next.nextSibling;
-                    fouls       = next.innerHTML;   next = next.nextSibling;
-                    
-                    turnovers   = next.innerHTML;   next = next.nextSibling;
-                    points      = next.innerHTML;   next = next.nextSibling;
-
-                    gamesObj[dateStr] = {
-                        opponent:    playAgainst,
-                        score:       gameScore,
-                        minutes:     timePlayed,
-                        twoMade:     fgMade,
-                        twoTried:    fgTried,
-                        threeMade:   threeMade,
-                        threeTried:  threeTried,
-                        freeMade:    freeMade,
-                        freeAttempt: freeTried,
-                        rebounds:    rebound,
-                        assists:     assists,
-                        blocks:      blocks,
-                        steals:      steals,
-                        fouls:       fouls,
-                        turnovers:   turnovers,
-                        points:      points
+                    playerObject[jersey] = {
+                        name:     name,
+                        espnId:   espnId[0],
+                        position: pos,
+                        age:      age,
+                        height:   hFeet
                     }
                 }
             }
-            return gamesObj;
+            return playerObject;
         } );
 
         console.log( JSON.stringify(allGames) );
@@ -104,4 +75,4 @@ function getTeamRoster( ) {
     });
 }
 
-getGameLog( );
+getTeamRoster( );
