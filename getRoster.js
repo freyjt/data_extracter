@@ -3,29 +3,29 @@
 // and builds a set of game data, returning a JSON string to console
 //
 // 
-function getGameLog( ) {
+function getTeamRoster( ) {
 
     var system   = require('system');
-    var playerId = system.args[1];
+    var teamId   = system.args[1];
 
-    //if(! /\n*/.match(playerId) ) { console.log("ERROR 1 "); phantom.exit(); }
     var page = require('webpage').create();
-    var url  = 'http://espn.go.com/nba/player/gamelog/_/id/' + playerId;
+    var url  = 'http://espn.go.com/nba/team/roster/_/name/' + teamId;
 
     page.open(url, function(status) {
 
         // var content = page.content;
         //the evaluate is where we can use some DOM js
         allGames = page.evaluate( function() {
-            date          = document.getElementsByClassName("tablesm")[0].value
+            
             
             //abuses table classing of even and oddrows to get all games
-            var oddGames  = document.getElementsByClassName("oddrow");
-            var evenGames = document.getElementsByClassName("evenrow")
+            var oddPlayers  = document.getElementsByClassName("oddrow");
+            var evenPlayers = document.getElementsByClassName("evenrow")
             var next;
-            var dateStr, playAgainst, gameScore, timePlayed,
-                fgMade, fgTried;
+
             var gamesObj  = {};
+
+            
             for( i = 0; i < oddGames.length + evenGames.length; i++) {
                 //seed it up
                 if(i < oddGames.length)
