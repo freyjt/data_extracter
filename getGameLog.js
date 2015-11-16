@@ -13,8 +13,8 @@ function getGameLog( ) {
 
         // var content = page.content;
         //the evaluate is where we can use some DOM js
-        allGames      = page.evaluate( function() {
-            date       = document.getElementsByClassName("tablesm")[0].value
+        allGames = page.evaluate( function() {
+            date          = document.getElementsByClassName("tablesm")[0].value
             
             //abuses table classing of even and oddrows to get all games
             var oddGames  = document.getElementsByClassName("oddrow");
@@ -23,11 +23,14 @@ function getGameLog( ) {
             var dateStr, playAgainst, gameScore, timePlayed,
                 fgMade, fgTried;
             var gamesObj  = {};
-            for( i = 0; i < oddGames.length; i++) {
+            for( i = 0; i < oddGames.length + evenGames.length; i++) {
                 //seed it up
-                next = oddGames[i].firstChild;
+                if(i < oddGames.length)
+                    next = oddGames[i].firstChild;
+                else
+                    next = evenGames[i - oddGames.length].firstChild;
 
-                if(next.innerHTML != 'Averages') {
+                if(next.innerHTML != 'Averages' && next.innerHTML != 'Totals') {
                     ///OMG just iterate into an array, then dump the array
                     //   when you assign the json
                     //divide current row
