@@ -12,8 +12,7 @@ function Main( ) {
     var testID       = 'cle';
 
     var rostStr      = 'phantomjs getRoster.js ' + testID;
-    var espnIdArr = [];
-    var playerArr = [];
+    var espnIdArr= [];
     //experimenting with not returning
     exe = childProcess.exec(rostStr, function(err, stdout, stderr) {
         if(!err) {
@@ -22,20 +21,33 @@ function Main( ) {
                 //test the output for some identifying features of the JSON string
                 //  imperfect to say the least
                 if(stdout[i][0] == '{' && stdout[i].length > 50) {
-
+                    var playerArr = [];
                     // console.log(stdout[i]);
                     unpacked = JSON.parse(stdout[i]);
-                    getIdentifiers( unpacked, espnIdArr, playerArr);
+                    console.log(unpacked);
+                    var key;
+                    arrByClosure(unpacked);
+                    // for( key in unpacked ) {
+                    //     // @TODO figure out why this test breaks it
+                    //     //if( !unpacked.hasOwnProperty(key) ) {
+                    //         playerArr.push(unpacked[key]['name']);
+                    //         espnIdArr.push(unpacked[key]['espnId']);
+                    //     //}
+                    // }
+
                     // for(i = 0; i < espnIdArr.length; i++) {
                     //     console.log(playerArr[i] + " : " + espnIdArr[i] );
                     // }
+                    // return espnIdArr;
                 }
             }
         } else {console.log("there was an error"); }
     });
+
 //....are you going to have to spawn all of the children within the major process
     exe.on('exit', function( ) {
-        console.log(espnIdArr);
+        console.log("Exit call.");
+        console.log(espnIdArr.length);
     });
     // console.log(espnIdArr);
     //don't delete this untill you have the main script written
@@ -52,19 +64,13 @@ function Main( ) {
     // exe.stdout.on('data', function(data) {
     //     console.log(data + '\n\n\n')
     // });
+    function arrByClosure( objIn ) {
+        espnIdArr = [];
+        for(key in objIn) {
+            espnIdArr.push(objIn[key]['espnId']);
+        }
+    }
 }
 
 Main( );
 
-//trying new scope
-function getIdentifiers( proStdOut, playerArr, idArr) {
-
-    var key;
-    for( key in proStdOut ) {
-        // @TODO figure out why this test breaks it
-        //if( !unpacked.hasOwnProperty(key) ) {
-            playerArr.push(unpacked[key]['name']);
-            idArr.push(unpacked[key]['espnId']);
-        //}
-    }
-}
