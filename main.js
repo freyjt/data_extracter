@@ -2,7 +2,10 @@
 
 function Main( ) {
     var childProcess = require('child_process');
-    childProcess.exec('phantomjs getGameLog.js 1966', function(err, stdout, stderr) {
+    var testID       = 1966;
+
+    var gameLogProc = 'phantomjs getGameLog.js ' + testID;
+    childProcess.exec(gameLogProc, function(err, stdout, stderr) {
         if(err) {
             console.log("Error. " + err.code);
         }
