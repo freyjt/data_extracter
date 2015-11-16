@@ -12,7 +12,8 @@ function Main( ) {
     var testID       = 'cle';
 
     var rostStr      = 'phantomjs getRoster.js ' + testID;
-    var espnIdArr= [];
+    var espnIdArr = [];
+    var playerArr = [];
     //experimenting with not returning
     exe = childProcess.exec(rostStr, function(err, stdout, stderr) {
         if(!err) {
@@ -21,20 +22,10 @@ function Main( ) {
                 //test the output for some identifying features of the JSON string
                 //  imperfect to say the least
                 if(stdout[i][0] == '{' && stdout[i].length > 50) {
-                    var playerArr = [];
-                    var espnIdArr = [];
+
                     // console.log(stdout[i]);
                     unpacked = JSON.parse(stdout[i]);
-                    console.log(unpacked);
-                    var key;
-                    for( key in unpacked ) {
-                        // @TODO figure out why this test breaks it
-                        //if( !unpacked.hasOwnProperty(key) ) {
-                            playerArr.push(unpacked[key]['name']);
-                            espnIdArr.push(unpacked[key]['espnId']);
-                        //}
-                    }
-
+                    getIdentifiers( unpacked, espnIdArr, playerArr);
                     // for(i = 0; i < espnIdArr.length; i++) {
                     //     console.log(playerArr[i] + " : " + espnIdArr[i] );
                     // }
@@ -64,3 +55,16 @@ function Main( ) {
 }
 
 Main( );
+
+//trying new scope
+function getIdentifiers( proStdOut, playerArr, idArr) {
+
+    var key;
+    for( key in proStdOut ) {
+        // @TODO figure out why this test breaks it
+        //if( !unpacked.hasOwnProperty(key) ) {
+            playerArr.push(unpacked[key]['name']);
+            idArr.push(unpacked[key]['espnId']);
+        //}
+    }
+}
