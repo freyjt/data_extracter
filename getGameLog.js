@@ -1,5 +1,11 @@
-function getGameLog(playerId) {
 
+
+function getGameLog( ) {
+
+    var system   = require('system');
+    var playerId = system.args[1];
+    console.log(playerId);
+    //if(! /\n*/.match(playerId) ) { console.log("ERROR 1 "); phantom.exit(); }
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/player/gamelog/_/id/' + playerId;
 
@@ -47,11 +53,15 @@ function getGameLog(playerId) {
                     next        = next.nextSibling;
 
                     fgMade      = parseInt(twoAttempt);
-                    fgTried     = parseInt( (twoAttempt.substr(fgMade.toString().length + 1)) )
-                    console.log(" L " + fgMade.length)
-                    console.log(twoAttempt + " : " + fgMade);
-                    console.log(fgTried);           threeAttempt= next.innerHTML;
+                    fgTried     = parseInt( (twoAttempt.substr(fgMade.toString().length + 1)) );
+
 //where is three tried
+                    threeAttempt= next.innerHTML;
+
+                    threeMade   = parseInt(threeAttempt);
+                    threeTried  = parseInt( (threeAttempt.substr(threeMade.toString().length + 1) ) );
+                    console.log( threeMade + " : " + threeTried);
+                    console.log(threeAttempt);
                     next        = next.nextSibling;
                     threePercent= next.innerHTML;
                     next        = next.nextSibling;
@@ -96,3 +106,5 @@ function getGameLog(playerId) {
 
     });
 }
+
+getGameLog( );
