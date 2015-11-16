@@ -1,12 +1,13 @@
 
 
 function Main( ) {
-    var page    = require('webpage').create();
-    var gameLog = page.includeJS('getGameLog.js');
-
-    var testId  = '1966'//lebron james
-
-
+    var childProcess = require('child_process');
+    childProcess.exec('dir /w', function(err, stdout, stderr) {
+        if(err) {
+            console.log("Error. " + err.code);
+        }
+        console.log(stdout);
+    })
 }
 
 Main( );
