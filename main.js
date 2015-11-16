@@ -5,11 +5,14 @@ function Main( ) {
     var testID       = 1966;
 
     var gameLogProc = 'phantomjs getGameLog.js ' + testID;
-    childProcess.exec(gameLogProc, function(err, stdout, stderr) {
+    exe = childProcess.exec(gameLogProc, function(err, stdout, stderr) {
         if(err) {
             console.log("Error. " + err.code);
         }
-        console.log(stdout);
+        
+    });
+    exe.stdout.on('data', function(data) {
+        console.log(data + '\n\n\n')
     })
 }
 
