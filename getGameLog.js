@@ -9,9 +9,6 @@ function getGameLog( ) {
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/player/gamelog/_/id/' + playerId;
 
-
-   
-
     page.open(url, function(status) {
 
         // var content = page.content;
@@ -34,23 +31,18 @@ function getGameLog( ) {
                     ///OMG just iterate into an array, then dump the array
                     //   when you assign the json
                     //divide current row
-                    dateStr     = next.innerHTML;
-                    next        = next.nextSibling;
-                    // todo this breaks on heading rows
-                    playAgainst = next.getElementsByTagName('a')[1].innerHTML;
+                    dateStr     = next.innerHTML;   next = next.nextSibling;
                     
+                    playAgainst = next.getElementsByTagName('a')[1].innerHTML;
                     next        = next.nextSibling;
                     gameScore   = next.getElementsByTagName('a')[0].innerHTML;
+                    next        = next.nextSibling;
 
-                    next        = next.nextSibling;
-                    timePlayed  = next.innerHTML;
-                    next        = next.nextSibling;
+                    timePlayed  = next.innerHTML;   next = next.nextSibling;
+                    twoAttempt  = next.innerHTML;   next = next.nextSibling;
                     
-                    twoAttempt  = next.innerHTML;
-                    next        = next.nextSibling;
-                    twoPercent  = next.innerHTML;
-                    next        = next.nextSibling;
-
+                    twoPercent  = next.innerHTML;   next = next.nextSibling;
+                    
                     fgMade      = parseInt(twoAttempt);
                     fgTried     = parseInt( (twoAttempt.substr(fgMade.toString().length + 1)) );
 
@@ -58,32 +50,24 @@ function getGameLog( ) {
 
                     threeMade   = parseInt(threeAttempt);
                     threeTried  = parseInt( (threeAttempt.substr(threeMade.toString().length + 1) ) );
- 
-                    next        = next.nextSibling;
-                    threePercent= next.innerHTML;
                     next        = next.nextSibling;
 
-                    freeAttempt = next.innerHTML;
-                    next        = next.nextSibling;
+                    threePercent= next.innerHTML;   next = next.nextSibling;
+                    freeAttempt = next.innerHTML;   next = next.nextSibling;
+                    
                     freeMade    = parseInt(freeAttempt);
                     freeTried   = parseInt( (freeAttempt.substr(freeMade.toString().length + 1 ) ) );
 
-                    freePercent = next.innerHTML;
-                    next        = next.nextSibling;
+                    freePercent = next.innerHTML;   next = next.nextSibling;
+                    rebound     = next.innerHTML;   next = next.nextSibling;
+                    assists     = next.innerHTML;   next = next.nextSibling;
+                    blocks      = next.innerHTML;   next = next.nextSibling;
+                    steals      = next.innerHTML;   next = next.nextSibling;
+                    fouls       = next.innerHTML;   next = next.nextSibling;
+                    
+                    turnovers   = next.innerHTML;   next = next.nextSibling;
+                    points      = next.innerHTML;   next = next.nextSibling;
 
-                    rebound     = next.innerHTML;
-                    next        = next.nextSibling;
-                    assists     = next.innerHTML;
-                    next        = next.nextSibling;
-                    blocks      = next.innerHTML;
-                    next        = next.nextSibling;
-                    steals      = next.innerHTML;
-                    next        = next.nextSibling;
-                    fouls       = next.innerHTML;
-                    next        = next.nextSibling;
-                    turnovers   = next.innerHTML;
-                    next        = next.nextSibling;
-                    points      = next.innerHTML;
                     gamesObj[dateStr] = {
                         opponent:    playAgainst,
                         score:       gameScore,
@@ -106,8 +90,9 @@ function getGameLog( ) {
             }
             return gamesObj;
         } );
+
         console.log( JSON.stringify(allGames) );
-        //console.log(table);
+
         phantom.exit();
 
     });
