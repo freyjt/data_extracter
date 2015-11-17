@@ -21,7 +21,7 @@ function Main( ) {
     var gameLog; //returned
     var gameJSON;
     //experimenting with not returning
-
+    var errorLog = [];
     retStr = childProcess.execSync( rostStr ).toString();
     retStr = retStr.split(lineEnd); // @TODO test: will this change on unix?
     for(i = 0; i < retStr.length; i++) {
@@ -47,10 +47,8 @@ function Main( ) {
                         //@TODO handle the returned string.
 
 
-                    } else if ( gameLog[j] == "Error. No data to return." ) {
-
-                        console.log( " No data error from espnId: " );
-                        console.log( "   " + unpacked[key]['espnId'] + " : " + unpacked[key]['name']);
+                    } else if ( gameLog[j].substr(0, 5) == "Error" ) {
+                        errorLog.push("" + gameLog[j] + " : " + unpacked[key]['espnId'] + " : " + unpacked[key]['name']);
                     }
 
 
@@ -59,7 +57,7 @@ function Main( ) {
 
         }
     }
-    console.log(espnIdArr);
+    console.log(errorLog);
     // console.log(espnIdArr);
     //don't delete this untill you have the main script written
     //  seriously..just...be cool about this
