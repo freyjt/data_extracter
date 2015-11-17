@@ -49,7 +49,7 @@ function Main( ) {
 
                     } else if ( gameLog[j] == "Error. No data to return." ) {
 
-                        console.log( "No data error from espnId: " );
+                        console.log( " No data error from espnId: " );
                         console.log( "   " + unpacked[key]['espnId'] + " : " + unpacked[key]['name']);
                     }
 

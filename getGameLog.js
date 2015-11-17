@@ -11,7 +11,10 @@ function getGameLog( ) {
     //if(! /\n*/.match(playerId) ) { console.log("ERROR 1 "); phantom.exit(); }
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/player/gamelog/_/id/' + playerId;
-
+    page.onConsoleMessage = function( msg ) {
+        console.log(msg);
+    }
+   // var rowcounter = 0; //debugging
     page.open(url, function(status) {
 
         // var content = page.content;
@@ -28,19 +31,36 @@ function getGameLog( ) {
             var gamesObj  = {};
             for( i = 0; i < oddGames.length + evenGames.length; i++) {
                 //seed it up
+
                 if(i < oddGames.length)
                     next = oddGames[i].firstChild;
                 else
                     next = evenGames[i - oddGames.length].firstChild;
+
 
                 if(next.innerHTML != 'Averages' && next.innerHTML != 'Totals') {
                     ///OMG just iterate into an array, then dump the array
                     //   when you assign the json
                     //divide current row
                     dateStr     = next.innerHTML;   next = next.nextSibling;
-                    //!!! does NOT generalize to previous seasons (playoffs?)
-                    playAgainst = next.getElementsByTagName('a')[1].innerHTML;
+                    // @todo - this is not gorgeous. you should be able to
+                    //  do this by accessing the li, then checking if it has
+                    //  an anchor in it
+                    var testOpp  = next.getElementsByTagName('a')[1];
+                    var testGame = next.getElementsByTagName('li')[1];
+                    if(typeof(testOpp) !== 'undefined') {
+                        playAgainst = testOpp.innerHTML;
+                    } else if( typeof(testGame) !== 'undefined') {
+                        playAgainst = testGame.innerHTML;
+                    } else {
+                        console.log("got an unknown");
+                        playAgainst = 'unknown';
+                    }
+
+
                     next        = next.nextSibling;
+
+
                     gameScore   = next.getElementsByTagName('a')[0].innerHTML;
                     next        = next.nextSibling;
 
