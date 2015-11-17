@@ -7,7 +7,7 @@ function getGameLog( ) {
 
     var system   = require('system');
     var playerId = system.args[1];
-
+    var i;
     //if(! /\n*/.match(playerId) ) { console.log("ERROR 1 "); phantom.exit(); }
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/player/gamelog/_/id/' + playerId;
@@ -16,12 +16,21 @@ function getGameLog( ) {
     }
    // var rowcounter = 0; //debugging
     page.open(url, function(status) {
-
         // var content = page.content;
         //the evaluate is where we can use some DOM js
         allGames = page.evaluate( function() {
-            date          = document.getElementsByClassName("tablesm")[0].value
-            
+            //get the year from the selectlist
+            //  assume first select is my select (true today)
+            year = "Not found yet.";
+            select = document.getElementsByClassName('tablesm')[0].childNodes;
+            for(i = 0; i < select.length; i++) {
+                if(select[i].hasAttribute('selected')) { 
+                    var year = parseInt(select[i].innerHTML); 
+                    i = select.length; 
+                }
+            }
+            console.log(year);
+
             //abuses table classing of even and oddrows to get all games
             var oddGames  = document.getElementsByClassName("oddrow");
             var evenGames = document.getElementsByClassName("evenrow")
