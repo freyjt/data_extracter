@@ -29,7 +29,6 @@ function getGameLog( ) {
                     i = select.length; 
                 }
             }
-            console.log(year);
 
             //abuses table classing of even and oddrows to get all games
             var oddGames  = document.getElementsByClassName("oddrow");
