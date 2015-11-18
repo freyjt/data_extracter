@@ -15,7 +15,9 @@ function getGameLog( playerId, yearIn) {
     // }
 
     page.open(url, function(status) {
-
+        if(status == 'fail') {
+            console.log("Error failed to open webpage. ");
+        }
         year = page.evaluate(function(yearIn) {
             ret = "Not found yet.";
             select = document.getElementsByClassName('tablesm')[0].childNodes;
