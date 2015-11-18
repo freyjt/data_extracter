@@ -52,8 +52,10 @@ function getGameLog( playerId, yearIn) {
                         next = oddGames[i].firstChild;
                     else
                         next = evenGames[i - oddGames.length].firstChild;
-                    
-                    if(next.innerHTML != 'Averages' && next.innerHTML != 'Totals') {
+                    // @TODO recognize when trade occurs (it's in a table row)
+                    //    and record it.
+                    if(next.innerHTML != 'Averages' && next.innerHTML != 'Totals'
+                        && !( next.hasAttribute('colspan') ) ) {
                         ///OMG just iterate into an array, then dump the array
                         //   when you assign the json
                         //divide current row

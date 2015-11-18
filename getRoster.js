@@ -10,9 +10,10 @@ function getTeamRoster( ) {
 
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/team/roster/_/name/' + teamId;
-    page.onConsoleMessage = function(msg) {
-        console.log(msg);
-    }
+    
+    // page.onConsoleMessage = function(msg) {
+    //     console.log(msg);
+    // }
     page.open(url, function(status) {
 
         // var content = page.content;
@@ -22,7 +23,7 @@ function getTeamRoster( ) {
             
             //abuses table classing of even and oddrows to get all games
             var oddPlayers  = document.getElementsByClassName("oddrow");
-            var evenPlayers = document.getElementsByClassName("evenrow")
+            var evenPlayers = document.getElementsByClassName("evenrow");
             var next;
 
             var playerObject  = {};
@@ -43,6 +44,7 @@ function getTeamRoster( ) {
                     var href     = anchor.href;
                     var espnId   = href.match(idRegex);
                     var name     = anchor.innerHTML;
+                    
                     next = next.nextSibling;
 
                     var pos      = next.innerHTML;  next = next.nextSibling;
@@ -50,7 +52,7 @@ function getTeamRoster( ) {
                     var heightStr= next.innerHTML;  next = next.nextSibling;
                     //convert height to decimal for easier comparison later
                     var hFeet    = parseInt(heightStr);
-                    var hInches  = parseInt(heightStr.substr(hFeet.toString().length + 1) );
+                    var hInches  = parseInt( heightStr.substr(hFeet.toString().length + 1) );
                     hFeet = hFeet + (hInches / 12);
                     hFeet  = hFeet.toFixed(2);
 
@@ -59,7 +61,7 @@ function getTeamRoster( ) {
                     var salary   = next.innerHTML;  next = next.nextSibling;
 
                     if(next) { console.log("more data?"); }
-
+                    
 
                     playerObject[jersey] = {
                         name:     name,
@@ -70,7 +72,8 @@ function getTeamRoster( ) {
                         weight:   weight,
                         college:  college,
                         salary:   salary
-                    }
+                    };
+
                     
                 }
             }
