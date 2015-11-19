@@ -1,9 +1,15 @@
 
 
 function Main( ) {
+    var args = process.argv;
+    if(typeof(args[2]) != 'undefined') {
+        modDate = args[2];
+    } else {
+        modDate = '';
+    }
+
 
     var lineEnd = /\r\n/;
-    
     var fs = require('fs');
     var i, j, a; //just an index man
     var childProcess = require('child_process');
@@ -22,11 +28,15 @@ function Main( ) {
 
     teamStr = fs.readFileSync('teamList.txt', 'utf-8');
     
+    //DEBUGGING
+    // teamStr = 'cle';
+    
     teams   = teamStr.split(lineEnd);
     console.log("Teams being accessed: " + teams);
     for(a = 0; a < teams.length; a++) {
 
         teamId = teams[a]; 
+        //this now lacks genrality. Later make it accept a year argument
         var rostStr      = 'phantomjs getRoster.js ' + teamId;
         console.log(rostStr);
         
@@ -42,14 +52,14 @@ function Main( ) {
                 
                 for(key in unpacked) {
 
-                    gameLogStr = baseGameLog + unpacked[key]['espnId'];
+                    gameLogStr = baseGameLog + unpacked[key]['espnId'] + " now " + modDate;
                     console.log(gameLogStr); //Leave this one!
                     gameLog = childProcess.execSync( gameLogStr ).toString();
                     
                     gameLog = gameLog.split(/\r\n/); //WHY does lineend not work
                     
                     for(j = 0; j < gameLog.length; j++) {
-
+                        // console.log(gameLog[j]); //debugging
                         if(gameLog[j][0] == '{' && gameLog[j].length >= 50) {
                             gameJSON = JSON.parse( gameLog[j] );
                     
@@ -58,7 +68,7 @@ function Main( ) {
                             j = gameLog.length;
                         } else if ( gameLog[j].substr(0, 5) == "Error" ) {
                             errorLog.push("" + gameLog[j] + " : " + unpacked[key]['espnId'] + " : " + unpacked[key]['name']);
-                            unpacked[key] = "Unavailable";
+                            unpacked[key]['gameLog'] = "Unavailable";
                         }
 
 

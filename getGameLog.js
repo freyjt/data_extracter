@@ -3,13 +3,13 @@
 // and builds a set of game data, returning a JSON string to console
 //
 // 
-function getGameLog( playerId, yearIn) {
+function getGameLog( playerId, yearIn, changeDate) {
 
     var i;
     //if(! /\n*/.match(playerId) ) { console.log("ERROR 1 "); phantom.exit(); }
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/player/gamelog/_/id/' + playerId + '/year/' + yearIn;
-    
+
     // page.onConsoleMessage = function( msg ) {
     //     console.log(msg);
     // }
@@ -18,7 +18,12 @@ function getGameLog( playerId, yearIn) {
         if(status == 'fail') {
             console.log("Error failed to open webpage. ");
         }
-        year = page.evaluate(function(yearIn) {
+
+
+        //get the year from the selectlist
+        //  assume first select is my select (true today)
+        year = page.evaluate(function(y) {
+            
             ret = "Not found yet.";
             select = document.getElementsByClassName('tablesm')[0].childNodes;
             for(i = 0; i < select.length; i++) {
@@ -36,9 +41,9 @@ function getGameLog( playerId, yearIn) {
         if( year == yearIn - 1) { //url gives season ending! 20xx;select list gives season beginning
             // var content = page.content;
             //the evaluate is where we can use some DOM js
-            allGames = page.evaluate( function(yearIn) {
-                //get the year from the selectlist
-                //  assume first select is my select (true today)
+            allGames = page.evaluate( function(dateChange) {
+                console.log("******************************" + dateChange);
+      
 
                 //abuses table classing of even and oddrows to get all games
                 var oddGames  = document.getElementsByClassName("oddrow");
@@ -62,6 +67,13 @@ function getGameLog( playerId, yearIn) {
                         //   when you assign the json
                         //divide current row
                         dateStr     = next.innerHTML;   next = next.nextSibling;
+                        if( dateChange ) {
+                            dateStr    = dateStr.substr(4);
+                            monthInt   = parseInt(dateStr);
+                            dayInt     = parseInt(dateStr.substr(monthInt.toString().length + 1) );
+                            if(monthInt <= 9) { monthInt += 12; } // keeps ordinality of dec-jan trans
+                            dateStr  = (monthInt + ( dayInt / 31 )).toFixed(3);
+                        }
                         // @todo - this is not gorgeous. you should be able to
                         //  do this by accessing the li, then checking if it has
                         //  an anchor in it
@@ -130,12 +142,13 @@ function getGameLog( playerId, yearIn) {
                             turnovers:   turnovers,
                             points:      points
                         }
+                        
                     }
                 }
             
                 return gamesObj;
 
-            } );
+            }, changeDate );
 
         } else {
             allGames = year;
@@ -161,15 +174,26 @@ function Main() {
     playerId     = parseInt(system.args[1]);
     if(typeof(system.args[2]) != 'undefined') {
         year     = parseInt(system.args[2]);
-    } else{
+        if( system.args[2] == 'now') { year = new Date().getFullYear() + 1;}
+    } 
+    else {
         year = new Date().getFullYear() + 1; //year ending vs year beginning is different for select list
+    }
+
+    if(typeof(system.args[3]) != 'undefined'){
+        boole = system.args[3];
+        if(boole == 'true' || boole == 'True' || boole == 'TRUE') {
+            dateChange = 1;
+        } else dateChange = 0;
+    } else {
+        dateChange = 0;
     }
     if(year < 1990 || year > 2040) {
         console.log("Error in getGameLog, year appears to be wrong. Maybe you mixed up the arguments");
         phantom.exit();
     }
 
-    getGameLog(playerId, year);
+    getGameLog(playerId, year, dateChange);
     
 }
 
