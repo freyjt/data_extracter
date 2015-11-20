@@ -63,9 +63,9 @@ function getTeamRoster( ) {
                     if(next) { console.log("more data?"); }
                     
 
-                    playerObject[jersey] = {
+                    playerObject[espnId[0]] = {
                         name:     name,
-                        espnId:   espnId[0],
+                        jersey:   jersey,
                         position: pos,
                         age:      age,
                         height:   hFeet,

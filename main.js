@@ -52,7 +52,7 @@ function Main( ) {
                 
                 for(key in unpacked) {
 
-                    gameLogStr = baseGameLog + unpacked[key]['espnId'] + " now " + modDate;
+                    gameLogStr = baseGameLog + key + " now " + modDate;
                     console.log(gameLogStr); //Leave this one!
                     gameLog = childProcess.execSync( gameLogStr ).toString();
                     
