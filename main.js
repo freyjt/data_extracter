@@ -1,11 +1,12 @@
 
 
 function Main( ) {
+
     var args = process.argv;
     if(typeof(args[2]) != 'undefined') {
         modDate = args[2];
     } else {
-        modDate = '';
+        modDate = 'now';
     }
 
 
@@ -15,8 +16,9 @@ function Main( ) {
     var childProcess = require('child_process');
 
     var baseRostStr  = 'phantomjs getRoster.js ';
-    
     var baseGameLog  = 'phantomjs getGameLog.js ';
+    var basePlyrSta  = 'phantomjs getPlayerStatus.js';
+
     var espnIdArr = [];
     var playerArr = [];
     var allInfo   = {};
@@ -52,7 +54,7 @@ function Main( ) {
                 
                 for(key in unpacked) {
 
-                    gameLogStr = baseGameLog + key + " now " + modDate;
+                    gameLogStr = baseGameLog + key + modDate;
                     console.log(gameLogStr); //Leave this one!
                     gameLog = childProcess.execSync( gameLogStr ).toString();
                     
@@ -62,21 +64,37 @@ function Main( ) {
                         // console.log(gameLog[j]); //debugging
                         if(gameLog[j][0] == '{' && gameLog[j].length >= 50) {
                             gameJSON = JSON.parse( gameLog[j] );
-                    
                             unpacked[key]['gameLog'] = gameJSON;
-                            
                             j = gameLog.length;
                         } else if ( gameLog[j].substr(0, 5) == "Error" ) {
                             errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key]['name']);
                             unpacked[key]['gameLog'] = "Unavailable";
                         }
-
-
                     }
+
+                    playerStatus = basePlyrSta + key;
+                    console.log(playerStatus);
+                    playerStatus = childProcess.execSync( playerStatus ).toString();
+
+                    playerStatus = playerStatus.split(/\r\n/);
+                    for(j = 0; j < gameLog.length; j++) {
+                        if(playerStatus[j] == 'out') {
+                            unpacked[key]['status'] = 'out';
+                        } else if( playerStatus[j] == 'active') {
+                            unpacked[key]['status'] = 'active';
+                        } else if( gameLog[j].substr(0, 5) == "Error") {
+                            errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key]['name']);
+                        }
+                    }
+                    if(typeof(unpacked[key]['status']) == 'undefined') {
+                        unpacked[key]['status'] = "Unavailable";
+                    }
+
                 }
 
             }
         }
+        console.log(unpacked);
         allInfo[teamId] = unpacked;
     }
     //**********************

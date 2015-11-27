@@ -1,7 +1,4 @@
-
-
-
-//
+//logs either out or active depending on the associated player status
 function getPlayerStatus( playerId ) {
 
     //make sure you deal with typechecking on playerId in main ;)
