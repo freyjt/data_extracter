@@ -15,7 +15,8 @@ console.log(url);
             status = page.evaluate( function( ) {
 
                 stat = document.getElementById('player-status-main');
-                if(typeof(stat) !== 'undefined') {
+                // return stat.toString();
+                if(stat !== null) {
                     return 'out';
                 } else {
                     return 'active';
