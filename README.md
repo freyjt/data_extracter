@@ -12,7 +12,7 @@ Required software
  -standard install
 </li>
 <li>phamtomjs</li>
-
+</ul>
 To run
 <ul>
 <li>clone it....</li>
