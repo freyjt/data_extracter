@@ -67,7 +67,7 @@ function Main( ) {
                             
                             j = gameLog.length;
                         } else if ( gameLog[j].substr(0, 5) == "Error" ) {
-                            errorLog.push("" + gameLog[j] + " : " + unpacked[key]['espnId'] + " : " + unpacked[key]['name']);
+                            errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key]['name']);
                             unpacked[key]['gameLog'] = "Unavailable";
                         }
 
