@@ -17,7 +17,7 @@ function Main( ) {
 
     var baseRostStr  = 'phantomjs getRoster.js ';
     var baseGameLog  = 'phantomjs getGameLog.js ';
-    var basePlyrSta  = 'phantomjs getPlayerStatus.js';
+    var basePlyrSta  = 'phantomjs getPlayerStatus.js ';
 
     var espnIdArr = [];
     var playerArr = [];
@@ -54,7 +54,7 @@ function Main( ) {
                 
                 for(key in unpacked) {
 
-                    gameLogStr = baseGameLog + key + modDate;
+                    gameLogStr = baseGameLog + key + " " + modDate;
                     console.log(gameLogStr); //Leave this one!
                     gameLog = childProcess.execSync( gameLogStr ).toString();
                     
@@ -75,16 +75,18 @@ function Main( ) {
                     playerStatus = basePlyrSta + key;
                     console.log(playerStatus);
                     playerStatus = childProcess.execSync( playerStatus ).toString();
-
+    
                     playerStatus = playerStatus.split(/\r\n/);
-                    for(j = 0; j < gameLog.length; j++) {
-                        if(playerStatus[j] == 'out') {
+                    for(j = 0; j < playerStatus.length; j++) {
+
+                        if( playerStatus[j] == 'out') {
                             unpacked[key]['status'] = 'out';
                         } else if( playerStatus[j] == 'active') {
                             unpacked[key]['status'] = 'active';
-                        } else if( gameLog[j].substr(0, 5) == "Error") {
+                        } else if( playerStatus[j].substr(0, 5) == "Error") {
                             errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key]['name']);
                         }
+
                     }
                     if(typeof(unpacked[key]['status']) == 'undefined') {
                         unpacked[key]['status'] = "Unavailable";

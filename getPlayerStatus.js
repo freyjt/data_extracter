@@ -5,11 +5,14 @@ function getPlayerStatus( playerId ) {
     var url  = "http://espn.go.com/nba/player/_/id/" + playerId;
     var page = require('webpage').create();
 console.log(url);
+
     page.open( url, function(status) {
-        if(status == 'fail')
-            console.log("Error, could not collect status on player: " + playerId + ". Webpage unavailable.");
+        if(status == 'fail') {
+            console.log("Error, could not collect status on player: " + playerId + ". Webpage unavailable.");     
+        }
         else {
-            status = page.evaluate( function( ) {
+
+            stas = page.evaluate( function( ) {
 
                 stat = document.getElementById('player-status-main');
                 // return stat.toString();
@@ -18,11 +21,17 @@ console.log(url);
                 } else {
                     return 'active';
                 }
+
             });
-            console.log(status);
+
         }
+        
+        console.log( stas);
         phantom.exit();
     });
+
+
+
 }
 
 function main( ) {
@@ -32,5 +41,6 @@ function main( ) {
     playerId     = parseInt(system.args[1]);
 
     getPlayerStatus( playerId );
+    // phantom.exit();
 }
 main();
