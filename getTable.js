@@ -15,12 +15,13 @@ exports.getTable = function(page, url, tableName) {
       csv_str = tableName + " " + oth +  "\n";
       query_str = 'table.' + tableName;
       tableau = document.querySelectorAll(query_str); 
-      csv_str += Object.keys(tableau) + "\n";
-      csv_str += Object.keys(tableau[0]) + "\n";
+      // This reorganizes the rows so that all headings
+      //  are at top; It's ok, but not very general
       for(var i = 0; i < tableau.length; i++) {
         var rowe = tableau[i]['rows'];
         for(var j = 0; j < rowe.length; j++) {
-          var sell = tableau[i]['rows'][j]['cells'];
+          var sell = rowe[j]['cells'];
+          csv_str += rowe[j].className + ',';
           for(var k = 0; k < sell.length; k++) {
             // @TODO collect attributes 
             var here = sell[k];

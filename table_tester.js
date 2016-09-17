@@ -8,6 +8,8 @@ function main() {
   console.log("Log in main");
   var url = 'http://www.espn.com/mlb/standings';
   var className = 'standings';
+//  var url = 'http://www.espn.com/mlb/team/roster/_/name/cle';
+//  var className = 'tablehead';
   something = tabMod.getTable(webPage, url, className);
   //phantom appears to thread out, phantom.exit doesn't make sense until we collect
   //  all the states
