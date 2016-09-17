@@ -52,7 +52,7 @@ function Main( ) {
 
                 unpacked = JSON.parse( retStr[i] );
                 
-                for(key in unpacked) {
+                for(var key in unpacked) {
 
                     gameLogStr = baseGameLog + key + " " + modDate;
                     console.log(gameLogStr); //Leave this one!
@@ -64,11 +64,11 @@ function Main( ) {
                         // console.log(gameLog[j]); //debugging
                         if(gameLog[j][0] == '{' && gameLog[j].length >= 50) {
                             gameJSON = JSON.parse( gameLog[j] );
-                            unpacked[key]['gameLog'] = gameJSON;
+                            unpacked[key].gameLog = gameJSON;
                             j = gameLog.length;
                         } else if ( gameLog[j].substr(0, 5) == "Error" ) {
-                            errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key]['name']);
-                            unpacked[key]['gameLog'] = "Unavailable";
+                            errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key].name);
+                            unpacked[key].gameLog = "Unavailable";
                         }
                     }
 
@@ -80,16 +80,16 @@ function Main( ) {
                     for(j = 0; j < playerStatus.length; j++) {
 
                         if( playerStatus[j] == 'out') {
-                            unpacked[key]['status'] = 'out';
+                            unpacked[key].status = 'out';
                         } else if( playerStatus[j] == 'active') {
-                            unpacked[key]['status'] = 'active';
+                            unpacked[key].status = 'active';
                         } else if( playerStatus[j].substr(0, 5) == "Error") {
-                            errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key]['name']);
+                            errorLog.push("" + gameLog[j] + " : " + unpacked[key] + " : " + unpacked[key].name);
                         }
 
                     }
-                    if(typeof(unpacked[key]['status']) == 'undefined') {
-                        unpacked[key]['status'] = "Unavailable";
+                    if(typeof(unpacked[key].status) == 'undefined') {
+                        unpacked[key].status = "Unavailable";
                     }
 
                 }
@@ -111,8 +111,8 @@ function Main( ) {
 
     function appendIdentifiers( objIn ) {
         for(key in objIn) {
-            espnIdArr.push(objIn[key]['espnId']);
-            playerArr.push(objIn[key]['name']);
+            espnIdArr.push(objIn[key].espnId);
+            playerArr.push(objIn[key].name);
         }
     }
 }

@@ -19,16 +19,15 @@ function getGameLog( playerId, yearIn, changeDate) {
             console.log("Error failed to open webpage. ");
         }
 
-
         //get the year from the selectlist
         //  assume first select is my select (true today)
         year = page.evaluate(function(y) {
             
-            ret = "Not found yet.";
-            select = document.getElementsByClassName('tablesm')[0].childNodes;
+            var ret = "Not found yet.";
+            var select = document.getElementsByClassName('tablesm')[0].childNodes;
             for(i = 0; i < select.length; i++) {
                 if(select[i].hasAttribute('selected')) { 
-                    var ret = parseInt(select[i].innerHTML); 
+                    ret = parseInt(select[i].innerHTML); 
                     i = select.length; 
                 } else if ( i == select.length - 1) {
                     return "Error no data available for selected year.";
@@ -37,17 +36,15 @@ function getGameLog( playerId, yearIn, changeDate) {
             return ret;
         });
 
-
         if( year == yearIn - 1) { //url gives season ending! 20xx;select list gives season beginning
             // var content = page.content;
             //the evaluate is where we can use some DOM js
             allGames = page.evaluate( function(dateChange) {
                 console.log("******************************" + dateChange);
       
-
                 //abuses table classing of even and oddrows to get all games
                 var oddGames  = document.getElementsByClassName("oddrow");
-                var evenGames = document.getElementsByClassName("evenrow")
+                var evenGames = document.getElementsByClassName("evenrow");
                 var next;
                 var dateStr, playAgainst, gameScore, timePlayed,
                     fgMade, fgTried;
@@ -61,8 +58,7 @@ function getGameLog( playerId, yearIn, changeDate) {
                         next = evenGames[i - oddGames.length].firstChild;
                     // @TODO recognize when trade occurs (it's in a table row)
                     //    and record it.
-                    if(next.innerHTML != 'Averages' && next.innerHTML != 'Totals'
-                        && !( next.hasAttribute('colspan') ) ) {
+                    if(next.innerHTML != 'Averages' && next.innerHTML != 'Totals' && !( next.hasAttribute('colspan') ) ) {
                         ///OMG just iterate into an array, then dump the array
                         //   when you assign the json
                         //divide current row
@@ -141,8 +137,7 @@ function getGameLog( playerId, yearIn, changeDate) {
                             fouls:       fouls,
                             turnovers:   turnovers,
                             points:      points
-                        }
-                        
+                        };
                     }
                 }
             
@@ -155,7 +150,7 @@ function getGameLog( playerId, yearIn, changeDate) {
         }
         
         if(typeof(allGames) == 'string') {
-            console.log(allGames)
+            console.log(allGames);
         }else {
             gamesJSON = JSON.stringify(allGames);
             
