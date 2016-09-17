@@ -2,7 +2,7 @@
 // table must have a specific classname
 //  is this tableName?
 //  There can be colgroups
-exports.getTable = function(page, url, tableName) {
+exports.getTable = function(page, url, tableName, header, outPath) {
   console.log("Called getTable for " + url + " " + tableName);
   var ex = require(phantom.libraryPath + "/callWithThrow.js");
   page.open(url, function(status) {
@@ -11,7 +11,7 @@ exports.getTable = function(page, url, tableName) {
       console.log("Unable to open webpage");
     } else { console.log("Opened web page"); }
     //page.evaluate goes here!
-    table_csv =  page.evaluate( function(tableName, oth) {
+    table_csv =  page.evaluate( function(tableName) {
       csv_str = '';
       query_str = 'table.' + tableName;
       tableau = document.querySelectorAll(query_str); 
@@ -33,7 +33,7 @@ exports.getTable = function(page, url, tableName) {
         }
       }
       return csv_str;
-    }, tableName, 'othervar');
+    }, tableName);
     console.log(table_csv);
   });
 };

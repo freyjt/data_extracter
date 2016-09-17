@@ -10,7 +10,10 @@ function main() {
   var className = 'standings';
 //  var url = 'http://www.espn.com/mlb/team/roster/_/name/cle';
 //  var className = 'tablehead';
-  something = tabMod.getTable(webPage, url, className);
+  var header = "Some text:";
+  var outPath =  'info.csv';
+  something = tabMod.getTable(webPage, url, className, header, outPath);
+  console.log("Called in main");
   //phantom appears to thread out, phantom.exit doesn't make sense until we collect
   //  all the states
 //  phantom.exit();
