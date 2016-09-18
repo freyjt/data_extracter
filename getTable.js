@@ -2,7 +2,8 @@
 // table must have a specific classname
 //  is this tableName?
 //  There can be colgroups
-exports.getTable = function(page, url, tableName, header, outPath) {
+exports.getTable = function(url, tableName, header, outPath) {
+  var page = require('webpage').create();
   console.log("Called getTable for " + url + " " + tableName);
   var ex = require(phantom.libraryPath + "/callWithThrow.js");
   page.open(url, function(status) {
@@ -34,7 +35,14 @@ exports.getTable = function(page, url, tableName, header, outPath) {
       }
       return csv_str;
     }, tableName);
-    console.log(table_csv);
+
+    write_string = '';
+    fs = require('fs');
+    for(var key in header) {
+      write_string += key.toUpperCase() + ": " + header[key] + "\n";
+    }
+    write_string += table_csv;
+    fs.write(outPath, write_string, 'w');
   });
 };
 
