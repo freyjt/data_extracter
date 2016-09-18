@@ -17,11 +17,18 @@ function main() {
                      "table_name": table_name,
                      "name": name,
                      "url": pass_url};
-    head = JSON.stringify(pass_head).replace(' ', "\ ").replace('"', '\\"');
+    var head = JSON.stringify(pass_head).split('"').join('\\"');
+    console.log(head); 
     children[name] = child('phantomjs', ['getTable.js', pass_url, table_name, head, out_path]);
-    children[name].on('exit', function(code, name) {
-      console.log(name + " exited with: " + code);
-    }, name);
+    children[name].stdout.on('data', function(data) {
+      console.log(data);
+    });
+    children[name].stderr.on('data', function(data) {
+      console.log(data);
+    });
+    children[name].on('exit', function(code) {
+      console.log(" exited with: " + code);
+    });
   }
 }
 main();

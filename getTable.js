@@ -2,7 +2,7 @@
 // table must have a specific classname
 //  is this tableName?
 //  There can be colgroups
-exports.getTable = function(url, tableName, header, outPath) {
+var getTable = function(url, tableName, header, outPath) {
   var page = require('webpage').create();
   console.log("Called getTable for " + url + " " + tableName);
   var ex = require(phantom.libraryPath + "/callWithThrow.js");
@@ -39,9 +39,6 @@ exports.getTable = function(url, tableName, header, outPath) {
        
         }
       }
-//     fs = require('fs');
-//     fs.write(outPath, csv_str, 'w');
-      return csv_str;
     }, tableName, header);
     console.log("::" + write_string);
     fs = require('fs');
@@ -56,9 +53,11 @@ function main() {
   if(args[0] == 'getTable.js') {
     url = args[1];
     table = args[2];
-    head = JSON.parse(args[3]);
+    head = args[3].split('\\"').join('"');
+    head = JSON.parse(head);
     output = args[4];
-    exports.getTable(url, table, head, output);
+    getTable(url, table, head, output);
   }
 }
+
 main();
