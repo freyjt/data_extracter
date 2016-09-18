@@ -12,9 +12,12 @@ function main() {
 
   for(var name in my_names) {
     name = my_names[name];
-    var pass_head = {"league": my_league, "table_name": table_name, "name": name};
     var pass_url = base_url.replace('<league>', my_league).replace('<name>', name);
     var out_path = my_league + "_" + name + "_" + Date.now() + ".team";
+    var pass_head = {"league": my_league,
+                     "table_name": table_name,
+                     "name": name,
+                     "url": pass_url};
     tab.getTable(pass_url, table_name, pass_head, out_path);
   }
 }

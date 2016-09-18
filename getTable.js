@@ -12,12 +12,18 @@ exports.getTable = function(url, tableName, header, outPath) {
       console.log("Unable to open webpage");
     } else { console.log("Opened web page"); }
     //page.evaluate goes here!
-    table_csv =  page.evaluate( function(tableName) {
+    write_string =  page.evaluate( function(tableName, head) {
       csv_str = '';
+      for(key in head) {
+        csv_str += key.toUpperCase() + ": " + head[key] + "\n";
+      }
       query_str = 'table.' + tableName;
       tableau = document.querySelectorAll(query_str); 
       // This reorganizes the rows so that all headings
       //  are at top; It's ok, but not very general
+      if(tableau.length === 0) {
+        csv_str += 'No data found\n';
+      }
       for(var i = 0; i < tableau.length; i++) {
         var rowe = tableau[i].rows;
         for(var j = 0; j < rowe.length; j++) {
@@ -33,16 +39,13 @@ exports.getTable = function(url, tableName, header, outPath) {
        
         }
       }
+//     fs = require('fs');
+//     fs.write(outPath, csv_str, 'w');
       return csv_str;
-    }, tableName);
-
-    write_string = '';
-    fs = require('fs');
-    for(var key in header) {
-      write_string += key.toUpperCase() + ": " + header[key] + "\n";
-    }
-    write_string += table_csv;
-    fs.write(outPath, write_string, 'w');
+    }, tableName, header);
+    console.log("::" + write_string);
+//    fs = require('fs');
+//    fs.write(outPath, write_string, 'w');
   });
 };
 
