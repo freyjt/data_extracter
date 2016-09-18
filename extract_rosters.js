@@ -7,9 +7,8 @@ function main() {
   var my_names = content[my_league]['name_list'];
   var base_url = content[my_league]['url'];
   var table_name = content[my_league]['table_class'];
-
-  var tab = require('./getTable.js');
-
+  var child = require('child_process').spawn;
+  var children = {};
   for(var name in my_names) {
     name = my_names[name];
     var pass_url = base_url.replace('<league>', my_league).replace('<name>', name);
@@ -18,7 +17,11 @@ function main() {
                      "table_name": table_name,
                      "name": name,
                      "url": pass_url};
-    tab.getTable(pass_url, table_name, pass_head, out_path);
+    head = JSON.stringify(pass_head).replace(' ', "\ ").replace('"', '\\"');
+    children[name] = child('phantomjs', ['getTable.js', pass_url, table_name, head, out_path]);
+    children[name].on('exit', function(code, name) {
+      console.log(name + " exited with: " + code);
+    }, name);
   }
 }
 main();

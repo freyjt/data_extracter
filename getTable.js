@@ -44,8 +44,21 @@ exports.getTable = function(url, tableName, header, outPath) {
       return csv_str;
     }, tableName, header);
     console.log("::" + write_string);
-//    fs = require('fs');
-//    fs.write(outPath, write_string, 'w');
+    fs = require('fs');
+    fs.write(outPath, write_string, 'w');
+    phantom.exit();
   });
 };
 
+function main() {
+  system = require('system');
+  args = system.args
+  if(args[0] == 'getTable.js') {
+    url = args[1];
+    table = args[2];
+    head = JSON.parse(args[3]);
+    output = args[4];
+    exports.getTable(url, table, head, output);
+  }
+}
+main();
