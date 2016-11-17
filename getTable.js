@@ -1,4 +1,3 @@
-
 // table must have a specific classname
 //  is this tableName?
 //  There can be colgroups
@@ -10,8 +9,8 @@ var getTable = function(url, tableName, header, outPath) {
     console.log("Called page.open");
     if(status == 'fail') {
       console.log("Unable to open webpage");
-    } else { console.log("Opened web page"); }
-    //page.evaluate goes here!
+    } else { console.log("Opened web page " + url); }
+
     write_string =  page.evaluate( function(tableName, head) {
       csv_str = '';
       for(key in head) {
@@ -36,9 +35,9 @@ var getTable = function(url, tableName, header, outPath) {
             if(k < sell.length - 1) csv_str += ",";
           }
           csv_str += "\n";
-       
         }
       }
+      return csv_str;
     }, tableName, header);
     console.log("::" + write_string);
     fs = require('fs');
@@ -50,6 +49,7 @@ var getTable = function(url, tableName, header, outPath) {
 function main() {
   system = require('system');
   args = system.args
+  for(a in args) { console.log('' + a + args[a]); }
   if(args[0] == 'getTable.js') {
     url = args[1];
     table = args[2];

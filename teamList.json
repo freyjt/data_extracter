@@ -36,5 +36,12 @@
      "min",
      "phi",
      "chi" ]
+  },
+  "nba": {
+    "url": "http://www.espn.com/<league>/team/roster/_/name/<name>",
+    "table_class": "tablehead",
+    "name_list": [
+      "cle"
+    ]
   }
 }

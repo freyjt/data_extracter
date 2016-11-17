@@ -3,14 +3,14 @@
 // and builds a set of game data, returning a JSON string to console
 //
 // 
-function getTeamRoster( ) {
+function getTeamRoster(teamId) {
 
-    var system   = require('system');
-    var teamId   = system.args[1];
-    if(teamId.length === 0) {
-      console.log("WTF NO ARGS?!");
-      system.exit();
-    } 
+//    var system   = require('system');
+//    var teamId   = system.args[1];
+//    if(teamId.length === 0) {
+//      console.log("WTF NO ARGS?!");
+//      system.exit();
+//    }
     var page = require('webpage').create();
     var url  = 'http://espn.go.com/nba/team/roster/_/name/' + teamId;
     
@@ -90,4 +90,13 @@ function getTeamRoster( ) {
     });
 }
 
-getTeamRoster( );
+
+var system   = require('system');
+var teamId   = system.args[1];
+
+if(teamId.length === 0) {
+  console.log("WTF NO ARGS?!");
+  system.exit();
+} 
+
+getTeamRoster(teamId);
