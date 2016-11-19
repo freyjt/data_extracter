@@ -3,11 +3,11 @@ require 'json'
 require_relative './get_table.rb'
 
 if __FILE__ == $PROGRAM_NAME
-
+  usage if ARGV.include? '--help'
   roster_dir = ARGV[0]
   out_dir = ARGV[1]
   year = ARGV[2]
-  dirs = Dir.entries(out_dir).reject {|k| File.directory?(k) }.map { |k| "#{roster_dir}/#{k}"
+  dirs = Dir.entries(roster_dir).reject {|k| File.directory?(k) }.map { |k| "#{roster_dir}/#{k}" }
   te = TableExtraction.new(:firefox, {class: 'tablehead'}, ';')
   FileUtils.mkdir_p out_dir
   base_url = 'http://www.espn.com/nba/player/gamelog/_/id/'
@@ -23,4 +23,11 @@ if __FILE__ == $PROGRAM_NAME
       te.record_table out_path
     end
   end
+end
+
+def usage
+  puts "Directory where we'll find the rosters is first argument"
+  puts "Output directory is the second argument"
+  puts "Year is the third argument"
+  exit
 end

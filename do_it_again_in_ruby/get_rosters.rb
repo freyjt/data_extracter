@@ -4,6 +4,7 @@ require_relative './get_table.rb'
 
 if __FILE__ == $PROGRAM_NAME
   
+   usage if ARGV.include? '--help'
    league = ARGV[0]
    out_dir = ARGV[1]
    info = JSON.parse(File.read('./teamList.json'))[league]
@@ -17,4 +18,12 @@ if __FILE__ == $PROGRAM_NAME
      te.record_table out_path
    end
 
+end
+
+def usage
+  puts "League is first argument, using its standard abbreviation."
+  puts "Out Directory is second argument."
+  puts "Gets active players only."
+  puts "Requires teamList.json to be present in the directory."
+  exit
 end
