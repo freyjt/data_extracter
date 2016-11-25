@@ -1,3 +1,5 @@
+#!/bin/ruby
+
 require 'fileutils'
 require 'json'
 require_relative './get_table.rb'
@@ -7,7 +9,8 @@ if __FILE__ == $PROGRAM_NAME
    usage if ARGV.include? '--help'
    league = ARGV[0]
    out_dir = ARGV[1]
-   info = JSON.parse(File.read('./teamList.json'))[league]
+   info = JSON.parse(File.read('../conf/teamList.json'))[league]
+   puts info
    te = TableExtraction.new(:firefox, {class: 'tablehead'}, ';')
    FileUtils.mkdir_p out_dir  
 

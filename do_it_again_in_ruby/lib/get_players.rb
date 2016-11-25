@@ -1,3 +1,5 @@
+#!/bin/ruby
+
 require 'fileutils'
 require 'json'
 require_relative './get_table.rb'

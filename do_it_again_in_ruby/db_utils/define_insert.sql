@@ -1,0 +1,1 @@
+INSERT into game_log (espn_id, game_date, home, opponent, fg_made, fg_attempted, three_made, three_attempted, ft_made, ft_attempted, rebounds, assists, bloks, steals, fouls, turnovers, points) values (:id, :g_date, :home, :opp, :fg_m, :fg_a, :thr_m, :thr_a, :ft_m, :ft_a, :reb, :ass, :bloc, :stl, :fouls, :tns, :pts);
