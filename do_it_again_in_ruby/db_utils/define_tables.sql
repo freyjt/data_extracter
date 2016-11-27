@@ -1,8 +1,5 @@
-
-
 CREATE TABLE player (
-espn_id varchar2(20),
-full_name varchar2(100),
+espn_id varchar2(20),full_name varchar2(100),
 CONSTRAINT player_pk PRIMARY KEY (espn_id)
 );
 
@@ -10,6 +7,7 @@ create table game_log (ESPN_ID VARCHAR2(20),
 GAME_DATE DATE,
 HOME CHAR(4),
 OPPONENT CHAR(3),
+MINUTES NUMBER(3),
 FG_MADE NUMBER(2),
 FG_ATTEMPTED NUMBER(2),
 THREE_MADE NUMBER(2),

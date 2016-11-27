@@ -1,3 +1,5 @@
+#!/bin/ruby
+
 require 'oci8'
 require 'yaml'
 

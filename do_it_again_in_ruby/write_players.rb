@@ -1,3 +1,5 @@
+#!/bin/ruby
+
 require 'oci8'
 require 'yaml'
 
@@ -54,7 +56,7 @@ if __FILE__ == $PROGRAM_NAME
       turnovers = arr[16].to_i
       points = arr[17].to_i
       puts "#{home} #{against} #{date} #{fg_made} #{fg_att} #{three_made} #{three_att} #{ft_made} #{ft_att} #{rebounds} #{assists} #{blocks} #{steals} #{fouls} #{turnovers} #{points}"
-      conn.exec('INSERT INTO game_logs(game_date, espn_id, home, opponent, fg_made, fg_attempted, three_made, three_attempted, ft_made, ft_attempted, rebounds, assists, bloks, steals, fouls, turnovers, points) VALUES (:dat, :id, :homey, :opponent, :fg_m, :fg_a, :three_m, :three_a, :ft_m, :ft_a, :rebounds, :assists, :bloks, :steals, :fouls, :turnovers, :points)', date, id, home, against, fg_made, fg_att, three_made, three_att, ft_made, ft_att, rebounds, assists, blocks, steals, fouls, turnovers, points)
+      conn.exec('INSERT INTO game_log(game_date, espn_id, home, opponent, minutes, fg_made, fg_attempted, three_made, three_attempted, ft_made, ft_attempted, rebounds, assists, bloks, steals, fouls, turnovers, points) VALUES (:dat, :id, :homey, :opponent, :minutes, :fg_m, :fg_a, :three_m, :three_a, :ft_m, :ft_a, :rebounds, :assists, :bloks, :steals, :fouls, :turnovers, :points)', date, id, home, against, minutes, fg_made, fg_att, three_made, three_att, ft_made, ft_att, rebounds, assists, blocks, steals, fouls, turnovers, points)
     end
   end
   conn.commit
